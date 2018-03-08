@@ -1,0 +1,120 @@
+
+.mind-panel {
+    position: relative;
+    width: 5000px;
+    height: 5000px;
+    background-color: #fff;
+}
+
+.mind-block {
+    max-width: 400px;
+    padding: 10px 23px;
+    border: 2px solid #f00;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 10;
+}
+
+.mind-block-drag {
+    position: absolute;
+    max-width: 400px;
+    padding: 10px 23px;
+    border: 2px solid #f00;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 12;
+}
+
+.mind-block-focus {
+    border-color: #f00 !important;
+}
+
+.mind-block-drag-over:before {
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    content: '';
+    width: 5px;
+    height: 2px;
+    background-color: orange;
+    transform: translateY(-50%);
+}
+
+.mind-block-drag-over:after {
+    position: absolute;
+    right: -55px;
+    top: 50%;
+    content: '';
+    width: 50px;
+    height: 20px;
+    border-radius: 8px;
+    background-color: orange;
+    transform: translateY(-50%);
+}
+
+.mind-first {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mind-color-primary {
+    background-color: dodgerblue;
+    color: #fff;
+    border-color: #0d3566;
+}
+
+.mind-block-content {
+    width: 100%;
+    word-wrap: break-word;
+    word-break: break-all;
+    user-select: none;
+}
+
+.mind-edit {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    padding: 10px 23px;
+    transform: translate(-50%, -50%);
+    word-wrap: break-word;
+    word-break: break-all;
+    text-align: center;
+    z-index: 11;
+}
+
+.mind-edit-active {
+    display: block;
+    background-color: #fff;
+    color: #000;
+}
+
+.mind-edit-able {
+    display: block;
+}
+
+.mind-group {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.mind-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.mind-shell:last-child {
+    margin-bottom: 0;
+}
+
+.mind-drag .mind-block{
+    pointer-events: none;
+}
