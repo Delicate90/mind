@@ -310,8 +310,8 @@ const drag = () => {
                     }
                 });
                 $('.mind-panel .mind-block').on('mouseover', function () {
-                    $(this).addClass('mind-block-drag-over');
                     parentBlock = $(this);
+                    if($(this).data('block-id') !== dragBlock.data('block-id'))$(this).addClass('mind-block-drag-over');
                 });
                 $('.mind-panel .mind-block').on('mouseleave', function () {
                     $(this).removeClass('mind-block-drag-over');
@@ -320,8 +320,26 @@ const drag = () => {
             }
         }
     });
+    const cover = (parentId, depth) => {
+        for(let block of mindDict.blocks){
+            if(block.parent === parentId){
+                block.childLevel = depth;
+                cover(block.id, depth + 1);
+            }
+        }
+    };
     $(document).on('mouseup', function () {
         if ($('.mind-drag .mind-block').length > 0) {
+            if(parentBlock.length > 0 && parentBlock.data('block-id') !== dragBlock.data('block-id')){
+                mindDict.blocks[mindDict.blocks.findIndex(item=>item.id === dragBlock.data('block-id'))].parent = parentBlock.data('block-id');
+                dragBlockDepth = mindDict.blocks.find(item => item.id === parentBlock.data('block-id')).childLevel;
+                cover(parentBlock.data('block-id'), dragBlockDepth + 1);
+                load(() => {
+                    edit();
+                    drag();
+                    hide();
+                });
+            }
             dragBlock = null;
             $('.mind-drag').html('');
             $(document).off('mousemove');
