@@ -239,6 +239,7 @@ const edit = () => {
 };
 
 //事件 - 隐藏
+//fixme 跨级隐藏时 小隐藏需要覆盖其全部子项
 const hide = () => {
     const branches = $('.mind-block-branch');
     $('.mind-group-hide').addClass('mind-group-hide-animate');
@@ -281,6 +282,7 @@ const hide = () => {
 };
 
 //事件 - 拖拽
+//fixme 父枝不可以拖拽至子叶
 const drag = () => {
     const blocks = $('.mind-block');
     let dragBlock = null;
@@ -348,4 +350,9 @@ const drag = () => {
             $('.mind-block-drag-over').removeClass('mind-block-drag-over');
         }
     });
-}
+};
+
+//事件 - 排序
+const sort = () => {
+
+};
