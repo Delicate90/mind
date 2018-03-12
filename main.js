@@ -113,6 +113,10 @@ const load = (callback) => {
             const child = group.children[childIndex];
             htmlStr += `<div class="mind-shell">
                 <div data-block-id="${child.id}" class="mind-block mind-color-primary">
+                    <div class="mind-sort">
+                        <div class="mind-sort-up">⬆</div>
+                        <div class="mind-sort-down">⬇</div>
+                    </div>
                     <div class="mind-view">
                         <div class="mind-block-content">${child.content}</div>
                     </div>
@@ -376,5 +380,5 @@ const drag = () => {
 
 //事件 - 排序
 const sort = () => {
-
+    $()
 };
