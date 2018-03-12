@@ -7,6 +7,7 @@ $(() => {
 
 const lineWidth = 60; //group 与 block 间距离
 let jsonDepth = 0;
+let dragSearchFlag = false;
 const mindDict = {
     blocks: [
         {
@@ -233,13 +234,13 @@ const edit = () => {
     });
     $('.mind-edit').on('blur', function () {
         $(this).parent().find('.mind-block-content').html($(this).html());
+        mindDict.blocks[mindDict.blocks.findIndex(item=>item.id === $(this).parent().data('block-id'))].content = $(this).html() ;
         $(this).removeClass('mind-edit-active');
         calc(jsonDepth);
     });
 };
 
 //事件 - 隐藏
-//fixme 跨级隐藏时 小隐藏需要覆盖其全部子项
 const hide = () => {
     const branches = $('.mind-block-branch');
     $('.mind-group-hide').addClass('mind-group-hide-animate');
@@ -248,9 +249,12 @@ const hide = () => {
         e.stopPropagation();
         const blockId = $(this).data('block-id');
         const cover = (blockId, bool) => {
+            //跨级隐藏时 小隐藏需要覆盖其全部子项
+            const parentDict = mindDict.blocks.find(item=>item.id === blockId);
             for(let block of mindDict.blocks){
                 if(block.parent === blockId){
                     if(!block.childHide) block.childHided = bool;
+                    if(parentDict.childHided) block.childHided = true;
                     cover(block.id,bool);
                 }
             }
@@ -282,7 +286,6 @@ const hide = () => {
 };
 
 //事件 - 拖拽
-//fixme 父枝不可以拖拽至子叶
 const drag = () => {
     const blocks = $('.mind-block');
     let dragBlock = null;
@@ -330,17 +333,36 @@ const drag = () => {
             }
         }
     };
+    //父枝不可以拖拽至子叶
+    const search = (dragBlockId, parentBlockId) => {
+        if(dragSearchFlag){
+            return;
+        }
+        for(let block of mindDict.blocks) {
+            if(block.parent === dragBlockId){
+                if(block.id === parentBlockId){
+                    dragSearchFlag = true;
+                }else{
+                    search(block.id, parentBlockId);
+                }
+            }
+        }
+    }
     $(document).on('mouseup', function () {
         if ($('.mind-drag .mind-block').length > 0) {
-            if(parentBlock.length > 0 && parentBlock.data('block-id') !== dragBlock.data('block-id')){
-                mindDict.blocks[mindDict.blocks.findIndex(item=>item.id === dragBlock.data('block-id'))].parent = parentBlock.data('block-id');
-                dragBlockDepth = mindDict.blocks.find(item => item.id === parentBlock.data('block-id')).childLevel;
-                cover(parentBlock.data('block-id'), dragBlockDepth + 1);
-                load(() => {
-                    edit();
-                    drag();
-                    hide();
-                });
+            if(parentBlock) {
+                dragSearchFlag = false;
+                search(dragBlock.data('block-id'), parentBlock.data('block-id'));
+                if(parentBlock.data('block-id') !== dragBlock.data('block-id') && !dragSearchFlag){
+                    mindDict.blocks[mindDict.blocks.findIndex(item=>item.id === dragBlock.data('block-id'))].parent = parentBlock.data('block-id');
+                    dragBlockDepth = mindDict.blocks.find(item => item.id === parentBlock.data('block-id')).childLevel;
+                    cover(parentBlock.data('block-id'), dragBlockDepth + 1);
+                    load(() => {
+                        edit();
+                        drag();
+                        hide();
+                    });
+                }
             }
             dragBlock = null;
             $('.mind-drag').html('');
